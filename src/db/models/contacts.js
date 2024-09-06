@@ -11,7 +11,8 @@ import mongoose from 'mongoose';
     },
     email: {
         type: String,
-        match: [/\S+@\S+\.\S+/]
+        match: [/\S+@\S+\.\S+/, 'Invalid email format'],
+        default: null
     },
     isFavourite: {
         type: Boolean,
@@ -20,11 +21,11 @@ import mongoose from 'mongoose';
     contactType: {
         type: String,
         enum: ['work', 'home', 'personal'],
-        required: true,
         default: 'personal'
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
 });
 
 
