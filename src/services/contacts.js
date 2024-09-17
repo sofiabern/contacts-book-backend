@@ -15,8 +15,6 @@ export const getContacts = async ({
 
   const contactsQuery = Contact.find();
 
-  console.log(filter);
-
   if (filter.type) {
     contactsQuery.where('contactType').equals(filter.type);
   }
