@@ -3,8 +3,9 @@ import cors from 'cors';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import dotenv from 'dotenv';
+import cookiesParser from 'cookie-parser';
 
-import { router } from './routers/contacts.js  ';
+import { router } from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
@@ -16,6 +17,8 @@ export const setupServer = () => {
   app.use(express.json());
 
   app.use(cors());
+
+  app.use(cookiesParser());
 
   const logger = pino();
   app.use(pinoHttp({ logger }));
