@@ -1,4 +1,10 @@
-import { register, login, logout, refresh } from '../services/auth.js';
+import {
+  register,
+  login,
+  logout,
+  refresh,
+  requestResetEmail,
+} from '../services/auth.js';
 
 const setupSessionCookies = (res, session) => {
   res.cookie('sessionId', session._id, {
@@ -35,7 +41,7 @@ export const loginController = async (req, res) => {
 
 export const logoutController = async (req, res) => {
   const { sessionId, sessionToken } = req.cookies;
-  
+
   await logout({
     sessionId,
     sessionToken,
@@ -57,5 +63,15 @@ export const refreshController = async (req, res) => {
     status: 200,
     message: 'Successfully refreshed a session!',
     data: { accessToken: session.accessToken },
+  });
+};
+
+export const requestResetEmailController = async (req, res, next) => {
+  await requestResetEmail(req.body.email);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Reset password email has been successfully sent.',
+    data: {},
   });
 };

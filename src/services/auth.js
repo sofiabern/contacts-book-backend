@@ -1,9 +1,12 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
+// import jwt from 'jwt';
 
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
+import { sendMail } from '../utils/sendMail.js';
+import { SMTP } from '../constants/index.js';
 
 const createSession = () => {
   return {
@@ -79,5 +82,20 @@ export const refresh = async ({ sessionId, sessionToken }) => {
   return await Session.create({
     userId: user._id,
     ...createSession(),
+  });
+};
+
+export const requestResetEmail = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (user === null) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  await sendMail({
+    from: SMTP.FROM_EMAIL,
+    to: email,
+    subject: 'Reset your password',
+    html: "To reset password click <a href='https://www.google.com'>here</a>",
   });
 };
