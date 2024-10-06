@@ -29,3 +29,8 @@ export const requestResetEmailSchema = Joi.object({
       'string.pattern.name': 'Invalid email format'
     })
   });
+
+  export const resetPasswordSchema = Joi.object({
+    password: Joi.string().required(),
+    token: Joi.string().required()
+  });

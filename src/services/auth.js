@@ -1,12 +1,15 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
-// import jwt from 'jwt';
+import jwt from 'jsonwebtoken';
+import handlebars from 'handlebars';
+import path from 'node:path';
+import * as fs from 'node:fs/promises';
 
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import { sendMail } from '../utils/sendMail.js';
-import { SMTP } from '../constants/index.js';
+import { SMTP, TEMPLATE_DIR } from '../constants/index.js';
 
 const createSession = () => {
   return {
@@ -92,10 +95,60 @@ export const requestResetEmail = async (email) => {
     throw createHttpError(404, 'User not found');
   }
 
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '15min',
+    },
+  );
+
+  const templateFile = path.join(TEMPLATE_DIR, 'reset-password-email.html');
+
+  const templateSource = await fs.readFile(templateFile, { encoding: 'UTF-8' });
+
+  const template = handlebars.compile(templateSource);
+
+  const html = template({
+    name: user.name,
+    link: `https://google.com/reset-password?token=${resetToken}
+`,
+  });
+
   await sendMail({
     from: SMTP.FROM_EMAIL,
     to: email,
     subject: 'Reset your password',
-    html: "To reset password click <a href='https://www.google.com'>here</a>",
+    html,
   });
+};
+
+export const resetPassword = async (password, token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    console.log(decoded);
+
+    const user = await User.findOne({ _id: decoded.sub, email: decoded.email });
+
+    if (user === null) {
+      throw createHttpError(404, 'User not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.findByIdAndUpdate(user._id, { password: hashedPassword });
+  } catch (error) {
+    if (
+      error.name === 'TokenExpiredError' ||
+      error.name === 'JsonWebTokenError'
+    ) {
+      throw createHttpError(401, 'Token not valid');
+    }
+
+    throw error;
+  }
 };
