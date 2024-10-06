@@ -1,15 +1,13 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
-import dotenv from 'dotenv';
 import cookiesParser from 'cookie-parser';
 
 import { router } from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
-
-dotenv.config();
 
 export const setupServer = () => {
   const app = express();
