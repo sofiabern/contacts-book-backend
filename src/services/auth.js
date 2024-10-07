@@ -125,7 +125,7 @@ export const requestResetEmail = async (email) => {
       subject: 'Reset your password',
       html,
     });
-  } catch (err) {
+  } catch {
     throw createHttpError(500, 'Failed to send the email, please try again later.');
   }
 };
@@ -133,8 +133,6 @@ export const requestResetEmail = async (email) => {
 export const resetPassword = async (password, token) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    console.log(decoded);
 
     const user = await User.findOne({ _id: decoded.sub, email: decoded.email });
 
