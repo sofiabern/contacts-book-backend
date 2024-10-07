@@ -9,7 +9,7 @@ import * as fs from 'node:fs/promises';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import { sendMail } from '../utils/sendMail.js';
-import { SMTP, TEMPLATE_DIR } from '../constants/index.js';
+import { SMTP, APP_DOMAIN, TEMPLATE_DIR } from '../constants/index.js';
 
 const createSession = () => {
   return {
@@ -114,16 +114,20 @@ export const requestResetEmail = async (email) => {
 
   const html = template({
     name: user.name,
-    link: `https://google.com/reset-password?token=${resetToken}
+    link: `${APP_DOMAIN}/reset-password?token=${resetToken}
 `,
   });
 
-  await sendMail({
-    from: SMTP.FROM_EMAIL,
-    to: email,
-    subject: 'Reset your password',
-    html,
-  });
+  try {
+    await sendMail({
+      from: SMTP.FROM,
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
+  } catch (err) {
+    throw createHttpError(500, 'Failed to send the email, please try again later.');
+  }
 };
 
 export const resetPassword = async (password, token) => {
@@ -141,12 +145,15 @@ export const resetPassword = async (password, token) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.findByIdAndUpdate(user._id, { password: hashedPassword });
+
+    await Session.deleteOne({ userId: user._id });
+
   } catch (error) {
     if (
       error.name === 'TokenExpiredError' ||
       error.name === 'JsonWebTokenError'
     ) {
-      throw createHttpError(401, 'Token not valid');
+      throw createHttpError(401, 'Token is expired or invalid.');
     }
 
     throw error;
