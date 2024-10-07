@@ -26,6 +26,10 @@ import mongoose, { Types } from 'mongoose';
     userId:{
         type: Types.ObjectId,
         required: true
+    },
+    photo:{
+        type: String,
+        default: null
     }
 }, {
     timestamps: true,

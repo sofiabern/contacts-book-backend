@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { Contact } from '../db/models/contact.js';
+import { saveFileToLocalMachine } from '../utils/saveFileToLocalMachine.js';
 
 export const getContacts = async ({
   page,
@@ -51,7 +52,9 @@ export const getContactById = async (contactId, userId) => {
 };
 
 export const createContact = async (payload) => {
-  const contact = await Contact.create(payload);
+  console.log(payload.photo)
+  const url = await saveFileToLocalMachine(payload.photo)
+  const contact = await Contact.create({...payload, photo: url});
   return contact;
 };
 
