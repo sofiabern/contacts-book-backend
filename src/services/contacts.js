@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { Contact } from '../db/models/contact.js';
-import { saveFileToLocalMachine } from '../utils/saveFileToLocalMachine.js';
+import { saveFile } from '../utils/saveFile.js';
 
 export const getContacts = async ({
   page,
@@ -15,7 +15,7 @@ export const getContacts = async ({
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const contactsQuery = Contact.find({userId});
+  const contactsQuery = Contact.find({ userId });
 
   if (filter.type) {
     contactsQuery.where('contactType').equals(filter.type);
@@ -28,7 +28,7 @@ export const getContacts = async ({
   const [contactsCount, contacts] = await Promise.all([
     contactsQuery.clone().countDocuments(),
     contactsQuery
-      .skip(skip) 
+      .skip(skip)
       .limit(limit)
       .sort({ [sortBy]: sortOrder })
       .exec(),
@@ -52,16 +52,28 @@ export const getContactById = async (contactId, userId) => {
 };
 
 export const createContact = async (payload) => {
-  console.log(payload.photo)
-  const url = await saveFileToLocalMachine(payload.photo)
-  const contact = await Contact.create({...payload, photo: url});
+  let url;
+
+  if (payload.photo) {
+    url = await saveFile(payload.photo);
+  }
+
+  const contact = await Contact.create({ ...payload, photo: url });
   return contact;
 };
 
-export const updateContact = async (id, userId, payload) => {
+export const updateContact = async ({ id, userId, photo, payload }) => {
+  let url;
+  
+  if (photo) {
+   url = await saveFile(photo);
+   payload.photo = url;
+  }
+ 
   const contact = await Contact.findOneAndUpdate({ _id: id, userId }, payload, {
     new: true,
   });
+  console.log(contact);
   return contact;
 };
 
