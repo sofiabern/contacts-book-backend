@@ -1,5 +1,5 @@
-import fs from 'node:fs/promises'
-import path from "node:path"
+import fs from 'node:fs/promises';
+import path from "node:path";
 import { BACKEND_HOST, UPLOAD_DIR } from '../constants/index.js';
 
 export const saveFileToLocalMachine = async (file) => {
