@@ -15,7 +15,15 @@ export const SMTP = {
 export const APP_DOMAIN = process.env.APP_DOMAIN;
 
 export const TEMPLATE_DIR = path.resolve("src","templates");
-export const TEMP_UPLOAD_DIR = path.resolve("temp")
+export const TEMP_UPLOAD_DIR = path.resolve("temp");
 export const UPLOAD_DIR = path.resolve( 'upload');
 
 export const BACKEND_HOST = process.env.BACKEND_HOST;
+
+export const CLOUDINARY = {
+  NAME: process.env.CLOUDINARY_NAME,
+  API_KEY: process.env.CLOUDINARY_API_KEY,
+  API_SECRET: process.env.CLOUDINARY_API_SECRET
+};
+
+export const IS_CLOUDINARY_ENABLED = process.env.IS_CLOUDINARY_ENABLED;
