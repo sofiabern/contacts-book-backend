@@ -9,7 +9,9 @@ export const createContactSchema = Joi.object({
       'string.pattern.name': 'Invalid email format'
     }).optional(),
     isFavourite: Joi.boolean().optional(),
-    contactType: Joi.string().valid('work', 'home', 'personal').optional()
+    contactType: Joi.string().valid('work', 'home', 'personal').optional(),
+    photo: Joi.string()
+
 });
 
 export const updateContactSchema = Joi.object({
@@ -21,5 +23,5 @@ export const updateContactSchema = Joi.object({
       'string.pattern.name': 'Invalid email format'
     }).optional(),
     isFavourite: Joi.boolean().optional(),
-    contactType: Joi.string().valid('work', 'home', 'personal').optional()
+    contactType: Joi.string().valid('work', 'home', 'personal').optional(),
 });
