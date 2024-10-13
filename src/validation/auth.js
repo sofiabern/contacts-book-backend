@@ -6,7 +6,7 @@ export const registerUserSchema = Joi.object({
     .pattern(/^\S+@\S+\.\S+$/, 'email')
     .required()
     .messages({
-      'string.pattern.name': 'Invalid email format'
+      'string.pattern.name': 'Invalid email format',
     }),
   password: Joi.string().required(),
 });
@@ -16,7 +16,7 @@ export const loginUserSchema = Joi.object({
     .pattern(/^\S+@\S+\.\S+$/, 'email')
     .required()
     .messages({
-      'string.pattern.name': 'Invalid email format'
+      'string.pattern.name': 'Invalid email format',
     }),
   password: Joi.string().required(),
 });
@@ -26,11 +26,15 @@ export const requestResetEmailSchema = Joi.object({
     .pattern(/^\S+@\S+\.\S+$/, 'email')
     .required()
     .messages({
-      'string.pattern.name': 'Invalid email format'
-    })
-  });
+      'string.pattern.name': 'Invalid email format',
+    }),
+});
 
-  export const resetPasswordSchema = Joi.object({
-    password: Joi.string().required(),
-    token: Joi.string().required()
-  });
+export const resetPasswordSchema = Joi.object({
+  password: Joi.string().required(),
+  token: Joi.string().required(),
+});
+
+export const googleOAuthSchema = Joi.object({
+  code: Joi.string().required(),
+});
