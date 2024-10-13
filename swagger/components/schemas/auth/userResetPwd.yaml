@@ -1,0 +1,13 @@
+type: object
+properties:
+  password:
+    type: string
+    description: The new password for the user account
+    example: "NewPassword123"
+  token:
+    type: string
+    description: The token received for resetting the password
+    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzBhNzNhNjhmZDNjNjcxNmJmMzdmNjAiLCJlbWFpbCI6ImNhdWxpZmxvd2VyczMzQGdtYWlsLmNvbSIsImlhdCI6MTcyODgxMTYzMSwiZXhwIjoxNzI4ODEyNTMxfQ.ZKN0cC7m5c3yDKAtYPWB0j0dYl4GKzj1cLY1hkK6Nqw"
+required:
+  - password
+  - token

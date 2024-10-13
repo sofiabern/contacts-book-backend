@@ -1,0 +1,19 @@
+description: Successfully refreshed a session
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "Successfully refreshed a session!"
+        data:
+           type: object
+           properties:
+            accessToken:
+              type: string
+              description: The new access token for authenticated requests
+              example: "Ewxa0DP/6UUdmhKk+LYBPg3INuCfbHNDcyrmK64Blxft2vH8LoIcug=="

@@ -1,0 +1,50 @@
+tags:
+  - Auth
+summary: Send reset password email
+operationId: sendResetEmail
+description: Sends an email with a link to reset the user's password. The user must provide a valid email address.
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../components/schemas/auth/userSendResetEmail.yaml
+responses:
+  '200':
+   description: Reset password email has been successfully sent
+   content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          status:
+            type: integer
+            example: 200
+          message:
+            type: string
+            example: 'Reset password email has been successfully sent.'
+          data:
+            type: object
+  '404':
+    $ref: ../../components/responses/auth/404-a.yaml
+  '500':
+   description: Internal Server Error
+   content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          status:
+            type: integer
+            example: 500
+          message:
+            type: string
+            enum:
+              - Mongoose error
+              - Something went wrong
+              - Failed to send the email, please try again later.
+            example: Something went wrong
+          data:
+            type: string
+            example: 'Internal Server Error. Please try again later.'

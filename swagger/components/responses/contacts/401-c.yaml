@@ -1,0 +1,18 @@
+description: Authentication failed
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 401
+        message:
+          type: string
+          enum:
+            - Auth header is not provided
+            - Auth header should be of bearer type
+            - Session not found!
+            - Access token expired
+            - User associated with this session is not found!
+          example:  Access token expired

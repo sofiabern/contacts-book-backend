@@ -9,6 +9,7 @@ import { router } from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { UPLOAD_DIR } from './constants/index.js';
+import { swagger } from './middlewares/swagger.js';
 
 export const setupServer = () => {
   const app = express();
@@ -16,6 +17,8 @@ export const setupServer = () => {
   app.use(express.json());
 
   app.use('/uploads', express.static(UPLOAD_DIR));
+
+  app.use('/api-docs', swagger());
 
   app.use(cors());
 

@@ -1,0 +1,58 @@
+tags:
+  - Auth
+summary: Log in a user
+operationId: loginUser
+description: Authenticates a user with the provided email and password.
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../components/schemas/auth/userLogin.yaml
+responses:
+  '200':
+    description: Successfully logged in a user
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: "Successfully logged in an user!"
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  description: The access token for authenticated requests
+                  example: "S7DPF2YnHcErvizjjLOvLCNi3MeKzrw4fr2VOsQStZDtx5LSNajN1g=="
+  '400':
+    description: Bad Request
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: "Bad Request"
+            errors:
+              type: array
+              items:
+                type: string
+              example: ["'email' is required", "'password' is required"]
+  '401':
+   $ref: ../../components/responses/auth/401-a.yaml
+  '404':
+   $ref: ../../components/responses/auth/404-a.yaml
+  '500':
+    $ref: ../../components/responses/shared/500-sh.yaml
+

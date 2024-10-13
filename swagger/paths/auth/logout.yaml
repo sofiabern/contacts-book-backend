@@ -1,0 +1,11 @@
+tags:
+  - Auth
+summary: Log out a user
+operationId: logoutUser
+description: Logs out a user by clearing their session cookies and removing their session from the database.
+security: []
+responses:
+  '204':
+    description: No content. Successfully logged out the user
+  '500':
+    $ref: ../../components/responses/shared/500NoMongoose-sh.yaml

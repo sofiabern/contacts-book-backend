@@ -1,0 +1,66 @@
+tags:
+  - Auth
+summary: Log in or register via Google OAuth
+operationId: loginOAuth
+description: Authenticates a user via Google OAuth using the authorization code. If the user does not exist, a new user account will be created.
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref:  ..\..\components\schemas\auth\userConfirmGoogle.yaml
+responses:
+  '200':
+    description: Successfully logged in via Google OAuth
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: "Successfully logged in via Google OAuth!"
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  description: The access token for authenticated requests
+                  example: "DSgBd83RXhk3RY0yl1aGPVPwOQZeqi8CtVgRphOOPQJkB7uRkiC0Vw=="
+  '400':
+    description: Bad Request (e.g., missing required fields)
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: "Bad Request"
+            errors:
+              type: array
+              items:
+                type: string
+              example: ["'code' is required"]
+  '401':
+    description: Unauthorized (e.g., invalid or expired code)
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: "Unauthorized"
+  '500':
+   $ref: ../../components/responses/shared/500-sh.yaml

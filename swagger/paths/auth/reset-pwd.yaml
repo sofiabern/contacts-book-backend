@@ -1,0 +1,65 @@
+tags:
+  - Auth
+summary: Reset user password
+operationId: resetPassword
+description: Resets the user password using the provided token and new password.
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+       $ref: ../../components/schemas/auth/userResetPwd.yaml
+responses:
+  '200':
+    description: Password has been successfully reset
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: "Password has been successfully reset."
+            data:
+              type: object
+  '400':
+    description: Bad Request (e.g., missing required fields)
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: "Bad Request"
+            errors:
+              type: array
+              items:
+                type: string
+              example: ["'password' is required", "'token' is required"]
+  '401':
+    description: Unauthorized (e.g., token is expired or invalid)
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              enum:
+                - User not found
+              example: "Token is expired or invalid."
+  '404':
+    $ref: ../../components/responses/auth/404-a.yaml
+  '500':
+    $ref: ../../components/responses/shared/500-sh.yaml

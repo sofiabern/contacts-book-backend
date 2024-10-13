@@ -1,0 +1,8 @@
+type: object
+properties:
+  code:
+    type: string
+    description: The authorization code returned from Google OAuth
+    example: "4/0AVG7fiTgyf1o8az6QUF08LvDdytAyp7mQwWb8Bn9-o82v_j9YDyF2fyKlt4VnM28MIfMeQ"
+required:
+  - code

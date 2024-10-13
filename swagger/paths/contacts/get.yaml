@@ -1,0 +1,122 @@
+tags:
+  - Contacts
+summary: Get all contacts
+operationId: getContacts
+description: 'Get all contacts with pagination, filtration and sorting'
+security:
+  - bearerAuth: []
+parameters:
+  - name: page
+    in: query
+    description: The page number to retrieve (pagination).
+    required: false
+    schema:
+      type: integer
+      default: 1
+  - name: perPage
+    in: query
+    description: The number of contacts per page (pagination).
+    required: false
+    schema:
+      type: integer
+      default: 10
+  - name: sortOrder
+    in: query
+    description: Sort order (asc for ascending, desc for descending).
+    required: false
+    schema:
+      type: string
+      enum: [asc, desc]
+      default: asc
+  - name: sortBy
+    in: query
+    description: The field to sort contacts by (e.g., _id, name, phoneNumber, email, isFavourite, contactType, createdAt, updatedAt).
+    required: false
+    schema:
+      type: string
+      enum:
+        [
+          _id,
+          name,
+          phoneNumber,
+          email,
+          isFavourite,
+          contactType,
+          createdAt,
+          updatedAt,
+        ]
+      default: _id
+  - name: type
+    in: query
+    description: Filter contacts by type (e.g., work, home, personal).
+    required: false
+    schema:
+      type: string
+      enum: [work, home, personal]
+  - name: isFavourite
+    in: query
+    description: Filter contacts by favorite status (true or false).
+    required: false
+    schema:
+      type: boolean
+responses:
+  '200':
+    description: Successfully found contacts
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code
+              example: 200
+            message:
+              type: string
+              description: Response message
+              example: Successfully found contacts!
+            data:
+              type: array
+              items:
+                $ref: ../../components/schemas/contacts/contact.yaml
+            page:
+              type: integer
+              description: The current page number.
+              example: 1
+            perPage:
+              type: integer
+              description: The number of contacts per page.
+              example: 10
+            totalItems:
+              type: integer
+              description: The total number of contacts available.
+              example: 1
+            totalPages:
+              type: integer
+              description: The total number of pages available.
+              example: 1
+            hasNextPage:
+              type: boolean
+              description: Indicates if there is a next page available.
+              example: false
+            hasPreviousPage:
+              type: boolean
+              description: Indicates if there is a previous page available.
+              example: false
+  '401':
+    $ref: ../../components/responses/contacts/401-c.yaml
+  '404':
+    description: No contacts found for this user
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: No contacts found for this user
+  '500':
+    $ref: ../../components/responses/shared/500NoMongoose-sh.yaml
