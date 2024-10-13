@@ -10,6 +10,7 @@ import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import { sendMail } from '../utils/sendMail.js';
 import { SMTP, APP_DOMAIN, TEMPLATE_DIR } from '../constants/index.js';
+import { validateCode } from '../utils/googleOAuth.js';
 
 const createSession = () => {
   return {
@@ -126,7 +127,10 @@ export const requestResetEmail = async (email) => {
       html,
     });
   } catch {
-    throw createHttpError(500, 'Failed to send the email, please try again later.');
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
   }
 };
 
@@ -145,7 +149,6 @@ export const resetPassword = async (password, token) => {
     await User.findByIdAndUpdate(user._id, { password: hashedPassword });
 
     await Session.deleteOne({ userId: user._id });
-
   } catch (error) {
     if (
       error.name === 'TokenExpiredError' ||
@@ -156,4 +159,33 @@ export const resetPassword = async (password, token) => {
 
     throw error;
   }
+};
+
+export const loginOrRegisterWithOAuth = async (code) => {
+  const loginTicket = await validateCode(code);
+  const payload = loginTicket.getPayload();
+
+  let user = await User.findOne({ email: payload.email });
+
+  if (!user) {
+    const hashedPassword = await bcrypt.hash(
+      crypto.randomBytes(40).toString('base64'),
+      10,
+    );
+
+    user = await User.create({
+      name: payload.name,
+      email: payload.email,
+      password: hashedPassword,
+    });
+  }
+
+  await Session.deleteOne({
+    userId: user._id,
+  });
+
+  return await Session.create({
+    userId: user._id,
+    ...createSession(),
+  });
 };
