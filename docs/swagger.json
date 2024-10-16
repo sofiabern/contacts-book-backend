@@ -1140,12 +1140,6 @@
             "default": "personal",
             "example": "work"
           },
-          "userId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The ID of the user who owns this contact",
-            "example": "60c72b2f9b1d8e001c4f6d10"
-          },
           "photo": {
             "type": "string",
             "format": "binary",
