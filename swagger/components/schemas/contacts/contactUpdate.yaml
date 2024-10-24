@@ -3,7 +3,7 @@ properties:
   name:
     type: string
     description: The name of the contact
-    example: 'Alinaa'
+    example: 'John'
   phoneNumber:
     type: string
     description: The phone number of the contact
